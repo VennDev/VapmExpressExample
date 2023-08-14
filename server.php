@@ -10,6 +10,21 @@ $express = new Express();
 
 $express->setPath(__DIR__ . '/website');
 
+$express->use('/', function ($request, $response, $next) {
+    echo 'Middleware 1' . PHP_EOL;
+    return $next();
+});
+
+$express->use('/', function ($request, $response, $next) {
+    echo 'Middleware 2' . PHP_EOL;
+    return $next();
+});
+
+$express->use('/', function ($request, $response, $next) {
+    echo 'Middleware 3' . PHP_EOL;
+    return $next();
+});
+
 $express->get('/', function ($request, $response) {
     return $response->render('/index.php');
 });
