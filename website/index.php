@@ -3,7 +3,14 @@
 /**
  * @throws Throwable
  */
-function index() : string {
+function index(mixed $args = null) : string {
+    if (is_array($args) && isset($args['username']) && isset($args['password'])) {
+        if ($args['username'] === 'admin' && $args['password'] === 'admin') {
+            $_SESSION['username'] = $args['username'];
+            $_SESSION['password'] = $args['password'];
+        }
+    }
+
     if (isset($_SESSION['username']) && isset($_SESSION['password'])) {
         return '
             <!DOCTYPE html>

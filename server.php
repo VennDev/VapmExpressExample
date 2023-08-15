@@ -2,7 +2,9 @@
 
 require 'vendor/autoload.php';
 
+use vennv\vapm\Async;
 use vennv\vapm\express\Express;
+use vennv\vapm\System;
 
 session_start();
 
@@ -38,12 +40,11 @@ $express->get('/', function ($request, $response) {
     return $response->render('/index.php');
 });
 
-$express->get('/other', function ($request, $response) {
-    return $response->render('/other.html');
-});
-
 $express->post('/login', function ($request, $response) {
-    return $response->redirect('/login.php');
+    return new Async(function () use ($request, $response) {
+        Async::await($response->active('/index.php'));
+        Async::await($response->redirect('/'));
+    });
 });
 
 $express->listen(8080, function () {
