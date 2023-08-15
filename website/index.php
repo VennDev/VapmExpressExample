@@ -1,8 +1,5 @@
 <?php
 
-use vennv\vapm\Promise;
-use vennv\vapm\System;
-
 /**
  * @throws Throwable
  */
@@ -26,10 +23,11 @@ function index() : string {
         <!DOCTYPE html>
         <html lang="en">
             <head>
+                <link rel="stylesheet" type="text/css" href="public/css/styles.css">
                 <title>Home</title>
             </head>
             <body>
-                <h1>Home</h1>
+                <h1 id="h1">Home</h1>
                 <form action="/login" method="post">
                     <input type="text" name="username" placeholder="Username">
                     <input type="password" name="password" placeholder="Password">
