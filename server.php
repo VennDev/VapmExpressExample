@@ -4,7 +4,6 @@ require 'vendor/autoload.php';
 
 use vennv\vapm\Async;
 use vennv\vapm\express\Express;
-use vennv\vapm\System;
 
 session_start();
 
