@@ -38,6 +38,10 @@ $express->get('/', function ($request, $response) {
     return $response->render('/index.php');
 });
 
+$express->get('/other', function ($request, $response) {
+    return $response->render('/other.html');
+});
+
 $express->post('/login', function ($request, $response) {
     return $response->redirect('/login.php');
 });
