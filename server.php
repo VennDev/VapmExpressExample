@@ -39,6 +39,10 @@ $express->get('/', function ($request, $response) {
     return $response->render('/index.php');
 });
 
+$express->get('/other', function ($request, $response) {
+    return $response->render('/other.html');
+});
+
 $express->get('/get-list/:name', function ($request, $response) {
     $name = $request->params->name;
     $age = $request->query->Age;
