@@ -39,6 +39,12 @@ $express->get('/', function ($request, $response) {
     return $response->render('/index.php');
 });
 
+$express->get('/get-list/:name', function ($request, $response) {
+    $name = $request->params->name;
+    $age = $request->query->Age;
+    return $response->send('Hello World ' . $name . ' Age:' . $age);
+});
+
 $express->post('/login', function ($request, $response) {
     return new Async(function () use ($request, $response) {
         Async::await($response->active('/index.php'));
