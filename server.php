@@ -45,7 +45,7 @@ $express->use('/', function ($request, $response, $next) {
     return $next();
 });
 
-$express->use('/', $router);
+$express->use('/router', $router);
 
 $express->get('/', function ($request, $response) {
     return $response->render('/index.php');
