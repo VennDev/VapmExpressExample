@@ -8,6 +8,16 @@ use vennv\vapm\express\Express;
 session_start();
 
 $express = new Express();
+$router = $express->router();
+
+$router->get('/test', function ($request, $response) {
+    return $response->send('Hello World');
+});
+
+$router->get('/test/:name', function ($request, $response) {
+    $name = $request->params->name;
+    return $response->send('Hello World ' . $name);
+});
 
 $express->setPath(__DIR__ . '/website');
 
@@ -34,6 +44,8 @@ $express->use('/', function ($request, $response, $next) {
     echo 'Middleware 3' . PHP_EOL;
     return $next();
 });
+
+$express->use('/', $router);
 
 $express->get('/', function ($request, $response) {
     return $response->render('/index.php');
