@@ -25,6 +25,11 @@ $childRouter->use('/hello2', function ($request, $response) {
     return $response->send('Hello World 2');
 });
 
+$childRouter->get('/hello-name/:name', function ($request, $response) {
+    $name = $request->params->name;
+    return $response->send('Hello World ' . $name);
+});
+
 $router->get('/hello', function ($request, $response) {
     return $response->send('Hello World');
 });
