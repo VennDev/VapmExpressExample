@@ -9,10 +9,27 @@ session_start();
 
 $express = new Express();
 $router = $express->router();
+$childRouter = $express->router();
+
+$express->setPath(__DIR__ . '/website');
+
+$express->use($express->static());
+
+$express->use($express->json());
+
+$childRouter->use('/hello', function ($request, $response) {
+    return $response->send('Hello World');
+});
+
+$childRouter->use('/hello2', function ($request, $response) {
+    return $response->send('Hello World 2');
+});
 
 $router->get('/hello', function ($request, $response) {
     return $response->send('Hello World');
 });
+
+$router->use('/child', $childRouter);
 
 $router->get('/hello2', function ($request, $response) {
     return $response->send('Hello World 2');
@@ -28,12 +45,6 @@ $router->get('/test/:name', function ($request, $response) {
 });
 
 $express->use('/router', $router);
-
-$express->setPath(__DIR__ . '/website');
-
-$express->use($express->static());
-
-$express->use($express->json());
 
 $express->use(function ($request, $response, $next) {
     echo 'Middleware 0' . PHP_EOL;
