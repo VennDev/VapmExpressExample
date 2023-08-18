@@ -9,7 +9,8 @@ session_start();
 
 $express = new Express();
 $router = $express->router();
-$childRouter = $express->router();
+$childRouter1 = $express->router();
+$childRouter2 = $express->router();
 
 $express->setPath(__DIR__ . '/website');
 
@@ -17,24 +18,39 @@ $express->use($express->static());
 
 $express->use($express->json());
 
-$childRouter->get('/hello', function ($request, $response) {
+$childRouter1->get('/hello', function ($request, $response) {
     return $response->send('Hello World');
 });
 
-$childRouter->get('/hello2', function ($request, $response) {
+$childRouter1->get('/hello2', function ($request, $response) {
     return $response->send('Hello World 2');
 });
 
-$childRouter->get('/hello-name/:name', function ($request, $response) {
+$childRouter1->get('/hello-name/:name', function ($request, $response) {
     $name = $request->params->name;
     return $response->send('Hello World ' . $name);
 });
 
-$router->get('/hello', function ($request, $response) {
+$childRouter2->get('/hello', function ($request, $response) {
     return $response->send('Hello World');
 });
 
-$router->use('/child', $childRouter);
+$childRouter2->get('/hello2', function ($request, $response) {
+    return $response->send('Hello World 2');
+});
+
+$childRouter2->get('/hello-name/:name', function ($request, $response) {
+    $name = $request->params->name;
+    return $response->send('Hello World ' . $name);
+});
+
+$childRouter1->use('/child2', $childRouter2);
+
+$router->use('/child', $childRouter1);
+
+$router->get('/hello', function ($request, $response) {
+    return $response->send('Hello World');
+});
 
 $router->get('/hello2', function ($request, $response) {
     return $response->send('Hello World 2');
