@@ -17,11 +17,11 @@ $express->use($express->static());
 
 $express->use($express->json());
 
-$childRouter->use('/hello', function ($request, $response) {
+$childRouter->get('/hello', function ($request, $response) {
     return $response->send('Hello World');
 });
 
-$childRouter->use('/hello2', function ($request, $response) {
+$childRouter->get('/hello2', function ($request, $response) {
     return $response->send('Hello World 2');
 });
 
