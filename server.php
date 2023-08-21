@@ -8,9 +8,9 @@ use vennv\vapm\simultaneous\Async;
 session_start();
 
 $express = new Express();
-$router = $express->router();
-$childRouter1 = $express->router();
-$childRouter2 = $express->router();
+$router = $express->router(['mergeParams' => true]);
+$childRouter1 = $express->router(['mergeParams' => true]);
+$childRouter2 = $express->router(['mergeParams' => true]);
 
 $express->setPath(__DIR__ . '/website');
 
@@ -18,14 +18,14 @@ $express->use($express->static());
 
 $express->use($express->json());
 
-$childRouter2->get('/get-age/:age', function ($request, $response) {
+$childRouter2->get('/hello-name/:age', function ($request, $response) {
     $params = $request->params;
     return $response->send('Your name is ' . $params['name'] . ' and your age is ' . $params['age']);
 });
 
 $childRouter1->use('/info', $childRouter2);
 
-$childRouter1->use('/get-name/:name', function ($request, $response, $next) {
+$childRouter1->use('/hello-name/:name', function ($request, $response, $next) {
     return $next();
 });
 
