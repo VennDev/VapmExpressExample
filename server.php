@@ -2,8 +2,8 @@
 
 require 'vendor/autoload.php';
 
-use vennv\vapm\Async;
 use vennv\vapm\express\Express;
+use vennv\vapm\simultaneous\Async;
 
 session_start();
 
@@ -18,73 +18,24 @@ $express->use($express->static());
 
 $express->use($express->json());
 
-$childRouter1->get('/hello', function ($request, $response) {
-    return $response->send('Hello World');
+$childRouter2->get('/get-age/:age', function ($request, $response) {
+    $params = $request->params;
+    return $response->send('Your name is ' . $params['name'] . ' and your age is ' . $params['age']);
 });
 
-$childRouter1->get('/hello2', function ($request, $response) {
-    return $response->send('Hello World 2');
-});
+$childRouter1->use('/info', $childRouter2);
 
-$childRouter1->get('/hello-name/:name', function ($request, $response) {
-    $name = $request->params->name;
-    return $response->send('Hello World ' . $name);
-});
-
-$childRouter2->get('/hello', function ($request, $response) {
-    return $response->send('Hello World');
-});
-
-$childRouter2->get('/hello2', function ($request, $response) {
-    return $response->send('Hello World 2');
-});
-
-$childRouter2->get('/hello-name/:name', function ($request, $response) {
-    $name = $request->params->name;
-    return $response->send('Hello World ' . $name);
-});
-
-$childRouter1->use('/child2', $childRouter2);
-
-$router->use('/child', $childRouter1);
-
-$router->get('/hello', function ($request, $response) {
-    return $response->send('Hello World');
-});
-
-$router->get('/hello2', function ($request, $response) {
-    return $response->send('Hello World 2');
-});
-
-$router->get('/hello3', function ($request, $response) {
-    return $response->send('Hello World 3');
-});
-
-$router->get('/test/:name', function ($request, $response) {
-    $name = $request->params->name;
-    return $response->send('Hello World ' . $name);
-});
-
-$express->use('/router', $router);
-
-$express->use(function ($request, $response, $next) {
-    echo 'Middleware 0' . PHP_EOL;
+$childRouter1->use('/get-name/:name', function ($request, $response, $next) {
     return $next();
 });
 
-$express->use('/', function ($request, $response, $next) {
-    echo 'Middleware 1' . PHP_EOL;
-    return $next();
-});
+$express->use('/router', $childRouter1);
 
-$express->use('/', function ($request, $response, $next) {
-    echo 'Middleware 2' . PHP_EOL;
-    return $next();
-});
-
-$express->use('/', function ($request, $response, $next) {
-    echo 'Middleware 3' . PHP_EOL;
-    return $next();
+$express->post('/login', function ($request, $response) {
+    return new Async(function () use ($request, $response) {
+        Async::await($response->active('/index.php'));
+        Async::await($response->redirect('/'));
+    });
 });
 
 $express->get('/', function ($request, $response) {
@@ -95,19 +46,7 @@ $express->get('/other', function ($request, $response) {
     return $response->render('/other.html');
 });
 
-$express->get('/get-list/:name', function ($request, $response) {
-    $name = $request->params->name;
-    $age = $request->query->Age;
-    return $response->send('Hello World ' . $name . ' Age:' . $age);
-});
-
-$express->post('/login', function ($request, $response) {
-    return new Async(function () use ($request, $response) {
-        Async::await($response->active('/index.php'));
-        Async::await($response->redirect('/'));
-    });
-});
-
+// example: http://127.0.0.1:8080/router/get-name/Nam/info/get-age/16
 $express->listen(8080, function () {
     echo 'Server is running on port 8080' . PHP_EOL;
 });
